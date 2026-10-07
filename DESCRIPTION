@@ -1,13 +1,33 @@
 Package: apihelperR
-Title: What the Package Does (One Line, Title Case)
+Title: Retrieve and Process Earthquake Data from the USGS API
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Authors@R:
+    c(
+        person(
+            given = "Venkata Balaji",
+            family = "Anupoju",
+            email = "venan324@student.liu.se",
+            role = c("aut", "cre")
+        ),
+        person(
+            given = "Marwan",
+            family = "Karim",
+            email = "marka671@student.liu.se",
+            role = c("aut")
+        )
+    )
+Description: Provides simple functions for retrieving earthquake data from
+    the United States Geological Survey (USGS) Earthquake API. The package
+    validates user input, sends API requests, and converts the returned
+    GeoJSON data into a clean R data frame for analysis and visualization.
+License: MIT + file LICENSE
 Config/roxygen2/version: 8.1.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/balascode/apihelperR
 BugReports: https://github.com/balascode/apihelperR/issues
+Imports: 
+    httr2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
