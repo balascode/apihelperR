@@ -1,5 +1,8 @@
 # apihelperR
 
+[![R-CMD-check](https://github.com/balascode/apihelperR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/balascode/apihelperR/actions/workflows/R-CMD-check.yaml)
+
+`apihelperR` is a small R package for working with earthquake data from the USGS Earthquake API.
 `apihelperR` is a small R package for working with earthquake data from the USGS Earthquake API.
 
 The package sends a request to the API, reads the returned GeoJSON data, and converts it into a clean R `data.frame` that is easier to use for analysis, plots, and Shiny applications.
