@@ -1,0 +1,178 @@
+---
+title: "Using apihelperR"
+author: "Venkata Balaji Anupoju and Marwan Karim"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Using apihelperR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 25px 35px;
+  line-height: 1.6;
+}
+
+h1, h2 {
+  margin-top: 2em;
+}
+
+pre {
+  border-radius: 6px;
+  padding: 12px;
+}
+
+img {
+  display: block;
+  margin: 25px auto 40px auto;
+  max-width: 72%;
+  height: auto;
+}
+</style>
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  out.width = "72%"
+)
+```
+
+# Introduction
+
+The `apihelperR` package provides functions for retrieving earthquake
+data from the USGS Earthquake API.
+
+The main function is `get_earthquakes()`. It allows the user to specify
+a date range, minimum earthquake magnitude, and maximum number of
+results.
+
+The function returns the earthquake information as a data frame that
+can be used for further analysis in R.
+
+# Load the package
+
+```{r}
+library(apihelperR)
+```
+
+# Get earthquake data
+
+Earthquake data can be retrieved using `get_earthquakes()`.
+
+```{r, eval=FALSE}
+quakes <- get_earthquakes(
+  start_date = "2026-01-01",
+  end_date = "2026-01-02",
+  min_magnitude = 4,
+  limit = 10
+)
+
+quakes
+```
+
+The `start_date` and `end_date` arguments define the time period to
+search.
+
+The `min_magnitude` argument specifies the minimum earthquake magnitude,
+while `limit` controls the maximum number of earthquakes returned.
+
+# Inspect the returned data
+
+The first rows of the returned data can be inspected using `head()`.
+
+```{r, eval=FALSE}
+head(quakes)
+```
+
+The structure of the data can also be examined using `str()`.
+
+```{r, eval=FALSE}
+str(quakes)
+```
+
+The returned data frame contains the following variables:
+
+- `id`
+- `time`
+- `magnitude`
+- `place`
+- `longitude`
+- `latitude`
+- `depth`
+- `tsunami`
+
+These variables provide information about when and where each
+earthquake occurred together with its magnitude, depth, and tsunami
+status.
+
+# Input validation
+
+The function checks the supplied arguments before sending a request to
+the API.
+
+For example, the start date cannot be later than the end date.
+
+```{r, eval=FALSE}
+get_earthquakes(
+  start_date = "2026-01-10",
+  end_date = "2026-01-01"
+)
+```
+
+This produces an error because the date range is invalid.
+
+The `limit` argument must also be between 1 and 20000.
+
+```{r, eval=FALSE}
+get_earthquakes(
+  start_date = "2026-01-01",
+  end_date = "2026-01-02",
+  limit = 0
+)
+```
+
+# Filtering earthquakes by magnitude
+
+The `min_magnitude` argument can be used to retrieve only earthquakes
+above a selected magnitude.
+
+For example, the following query requests earthquakes with a magnitude
+of at least 5.
+
+```{r, eval=FALSE}
+large_quakes <- get_earthquakes(
+  start_date = "2026-01-01",
+  end_date = "2026-01-07",
+  min_magnitude = 5,
+  limit = 20
+)
+
+head(large_quakes)
+```
+
+# Complete workflow
+
+A complete example using the package can be performed as follows:
+
+```{r, eval=FALSE}
+quakes <- get_earthquakes(
+  start_date = "2026-01-01",
+  end_date = "2026-01-02",
+  min_magnitude = 4,
+  limit = 10
+)
+
+head(quakes)
+str(quakes)
+```
+
+The `apihelperR` package therefore provides a simple interface for
+retrieving earthquake information from the USGS Earthquake API and
+returning it in a format suitable for analysis in R.
