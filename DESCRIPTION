@@ -26,8 +26,11 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/balascode/apihelperR
 BugReports: https://github.com/balascode/apihelperR/issues
-Imports: 
+Imports:
     httr2
-Suggests: 
-    testthat (>= 3.0.0)
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
+VignetteBuilder: knitr
