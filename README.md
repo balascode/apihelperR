@@ -2,10 +2,9 @@
 
 [![R-CMD-check](https://github.com/balascode/apihelperR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/balascode/apihelperR/actions/workflows/R-CMD-check.yaml)
 
-`apihelperR` is a small R package for working with earthquake data from the USGS Earthquake API.
-`apihelperR` is a small R package for working with earthquake data from the USGS Earthquake API.
+`apihelperR` is a small R package for retrieving and working with earthquake data from the USGS Earthquake API.
 
-The package sends a request to the API, reads the returned GeoJSON data, and converts it into a clean R `data.frame` that is easier to use for analysis, plots, and Shiny applications.
+The package sends requests to the USGS API, reads the returned GeoJSON data, and converts it into a clean R `data.frame` that can be used for analysis, plots, and Shiny applications.
 
 This package was developed as part of the **Advanced Programming in R (732A94)** course at Linköping University.
 
@@ -16,8 +15,8 @@ This package was developed as part of the **Advanced Programming in R (732A94)**
 - retrieve earthquake data for a selected date range
 - filter earthquakes by minimum magnitude
 - limit the number of returned results
-- return the data as a clean R `data.frame`
-- provide useful fields such as time, magnitude, place, longitude, latitude, depth, and tsunami flag
+- return earthquake data as a clean R `data.frame`
+- provide useful information such as time, magnitude, place, longitude, latitude, depth, and tsunami flag
 - validate user input before sending a request to the API
 
 ## Installation
@@ -46,8 +45,6 @@ library(apihelperR)
 
 The main function in the package is `get_earthquakes()`.
 
-Example:
-
 ```r
 library(apihelperR)
 
@@ -63,7 +60,7 @@ quakes
 
 This example asks the USGS API for up to 10 earthquakes that occurred between `2026-01-01` and `2026-01-02` with a magnitude of at least 4.
 
-The result is returned as a regular R `data.frame`.
+The result is returned as an R `data.frame`.
 
 ## Returned data
 
@@ -80,7 +77,7 @@ The returned data contains the following columns:
 | `depth` | Depth of the earthquake in kilometres |
 | `tsunami` | Tsunami flag provided by USGS |
 
-The `time` column is converted to a readable R date-time value in UTC.
+The `time` column is converted into a readable R date-time value in UTC.
 
 ## Function arguments
 
@@ -88,9 +85,7 @@ The `get_earthquakes()` function uses four main arguments.
 
 ### `start_date`
 
-The start of the search period.
-
-Example:
+The beginning of the search period.
 
 ```r
 start_date = "2026-01-01"
@@ -99,8 +94,6 @@ start_date = "2026-01-01"
 ### `end_date`
 
 The end of the search period.
-
-Example:
 
 ```r
 end_date = "2026-01-02"
@@ -112,8 +105,6 @@ The start date cannot be later than the end date.
 
 The minimum earthquake magnitude to include.
 
-Example:
-
 ```r
 min_magnitude = 4
 ```
@@ -124,19 +115,19 @@ The default value is `0`.
 
 The maximum number of earthquake records to return.
 
-Example:
-
 ```r
 limit = 10
 ```
 
 The default value is `1000`.
 
+The package accepts values from 1 to 20000 for `limit`.
+
 ## Input validation
 
-The package checks the input before sending a request to the API.
+The package checks user input before sending a request to the API.
 
-For example, this call is not valid:
+For example, this request is invalid:
 
 ```r
 get_earthquakes(
@@ -145,13 +136,11 @@ get_earthquakes(
 )
 ```
 
-The package will return an error because the start date is later than the end date.
+The package returns an error because the start date is later than the end date.
 
-The package also checks invalid dates, invalid magnitude values, and invalid limits.
+The package also checks invalid dates, invalid magnitude values, and invalid result limits.
 
 ## How the package works
-
-The package follows a simple flow:
 
 ```text
 User calls get_earthquakes()
@@ -169,15 +158,18 @@ The request is sent to the USGS API
 USGS returns GeoJSON data
         |
         v
-The response is converted to R objects
+The response is converted into R objects
         |
         v
-The package creates a clean data.frame
+The nested response is parsed
+        |
+        v
+A clean data.frame is returned
 ```
 
 The package uses `httr2` to send HTTP requests.
 
-The USGS API returns nested GeoJSON data. Internally, `apihelperR` extracts the useful fields and converts them into a simpler table.
+The USGS API returns nested GeoJSON data. Internally, `apihelperR` extracts the useful values from the response and converts them into a simpler table.
 
 ## Testing
 
@@ -187,19 +179,35 @@ The tests check important behaviour such as:
 
 - whether the function returns a `data.frame`
 - whether the expected columns are present
-- whether invalid date ranges return an error
-- whether invalid limits return an error
+- whether invalid date ranges produce an error
+- whether invalid result limits produce an error
 
-During development, the tests can be run with:
+Run the tests with:
 
 ```r
 devtools::test()
 ```
 
-The full package can be checked with:
+Run the full package check with:
 
 ```r
 devtools::check()
+```
+
+## Vignette
+
+The package includes a vignette with examples of how to use `apihelperR`.
+
+List the available vignette with:
+
+```r
+vignette(package = "apihelperR")
+```
+
+Open it with:
+
+```r
+vignette("apihelperR", package = "apihelperR")
 ```
 
 ## Data source
@@ -214,7 +222,7 @@ USGS Earthquake Hazards Program:
 
 https://earthquake.usgs.gov/
 
-The package uses this API endpoint:
+The package uses this endpoint:
 
 ```text
 https://earthquake.usgs.gov/fdsnws/event/1/query
@@ -222,31 +230,15 @@ https://earthquake.usgs.gov/fdsnws/event/1/query
 
 The USGS Earthquake API does not require an API key.
 
-## Example workflow
-
-```r
-library(apihelperR)
-
-quakes <- get_earthquakes(
-  start_date = "2026-01-01",
-  end_date = "2026-01-02",
-  min_magnitude = 4,
-  limit = 10
-)
-
-head(quakes)
-summary(quakes$magnitude)
-```
-
-The latitude and longitude columns can also be used later in maps or Shiny applications.
-
 ## Shiny application
 
-A separate Shiny application is being developed using this package.
+A separate Shiny application is available for interactively exploring earthquake data using this package.
 
-The package handles the API request and data cleaning, while the Shiny application handles the user interface and visualisation.
+Shiny repository:
 
-The overall structure is:
+https://github.com/Hakaishinnn/apihelperR-shiny
+
+The package handles API communication and data cleaning, while the Shiny application handles the user interface and visualisation.
 
 ```text
 Shiny application
@@ -258,8 +250,6 @@ apihelperR
 USGS Earthquake API
 ```
 
-This keeps the package reusable outside the Shiny application.
-
 ## Authors
 
 **Venkata Balaji Anupoju**  
@@ -267,7 +257,8 @@ LiU ID: `venan324`
 GitHub: `balascode`
 
 **Marwan Karim**  
-LiU ID: `marka671`
+LiU ID: `marka671`  
+GitHub: `Hakaishinnn`
 
 Developed for:
 
@@ -276,4 +267,4 @@ Linköping University
 
 ## License
 
-This project was created for educational purposes as part of a university course.
+This project is licensed under the MIT License.

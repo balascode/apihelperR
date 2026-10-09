@@ -3,7 +3,17 @@ parse_earthquakes <- function(data) {
   features <- data$features
 
   if (length(features) == 0) {
-    return(data.frame())
+    return(data.frame(
+      id = character(),
+      time = as.POSIXct(character(), tz = "UTC"),
+      magnitude = numeric(),
+      place = character(),
+      longitude = numeric(),
+      latitude = numeric(),
+      depth = numeric(),
+      tsunami = integer(),
+      stringsAsFactors = FALSE
+    ))
   }
 
   result <- lapply(features, function(feature) {
