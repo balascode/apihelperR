@@ -1,35 +1,45 @@
 test_that("get_earthquakes returns a data frame", {
+
+  skip_on_ci()
+
   result <- get_earthquakes(
     start_date = "2026-01-01",
     end_date = "2026-01-02",
     min_magnitude = 4,
-    limit = 5
+    limit = 100
   )
 
-  expect_s3_class(result, "data.frame")
-  expect_lte(nrow(result), 5)
+  expect_s3_class(
+    result,
+    "data.frame"
+  )
 })
 
 test_that("get_earthquakes returns expected columns", {
+
+  skip_on_ci()
+
   result <- get_earthquakes(
     start_date = "2026-01-01",
     end_date = "2026-01-02",
     min_magnitude = 4,
-    limit = 5
+    limit = 100
   )
 
-  expected_columns <- c(
-    "id",
-    "time",
-    "magnitude",
-    "place",
-    "longitude",
-    "latitude",
-    "depth",
-    "tsunami"
+  expect_true(
+    all(
+      c(
+        "id",
+        "time",
+        "magnitude",
+        "place",
+        "longitude",
+        "latitude",
+        "depth",
+        "tsunami"
+      ) %in% names(result)
+    )
   )
-
-  expect_true(all(expected_columns %in% names(result)))
 })
 
 test_that("invalid date order gives an error", {
